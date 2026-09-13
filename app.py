@@ -7,29 +7,10 @@ import datetime
 
 st.set_page_config(layout="wide", page_title="Dashboard Trading Pro")
 
-# --- CSS HACK: MEMAKSA 3 KOLOM DI HP ---
+# --- CSS HACK DIHAPUS (KEMBALI KE GULIR BAWAH BAWAAN STREAMLIT) ---
 st.markdown("""
 <style>
-@media (max-width: 768px) {
-    [data-testid="stHorizontalBlock"] {
-        flex-direction: row !important;
-        flex-wrap: nowrap !important;
-    }
-    [data-testid="column"] {
-        width: 32% !important;
-        min-width: 32% !important;
-        flex: 1 1 32% !important;
-        padding: 0 4px !important;
-    }
-    [data-testid="column"] p, [data-testid="column"] div, [data-testid="column"] span {
-        font-size: 12px !important;
-    }
-    button[data-testid="baseButton-popover"] {
-        padding: 2px 5px !important;
-        font-size: 11px !important;
-        width: 100% !important;
-    }
-}
+/* Tampilan HP dibiarkan menumpuk ke bawah agar lebih mudah dibaca */
 </style>
 """, unsafe_allow_html=True)
 
