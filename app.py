@@ -23,7 +23,7 @@ button[data-testid="baseButton-popover"] {
 st_autorefresh(interval=60000, key="datarefresh")
 
 # ==========================================
-# BAGIAN 1: DATABASE MINI (JSON) AGAR TAHAN REFRESH
+# BAGIAN 1: DATABASE MINI (JSON)
 # ==========================================
 FILE_PENGATURAN = "pengaturan.json"
 
@@ -58,26 +58,34 @@ tv = get_tv_connection()
 with st.sidebar:
     st.header("⚙️ Pengaturan Analisa")
     
-    # 1. Pilihan Broker (Tersimpan Permanen)
+    # 1. Pilihan Broker
     pilihan_broker = st.selectbox("Pilih Broker:", data_pengaturan["broker_tersimpan"] + ["+ Tambah Broker Baru..."])
     
     if pilihan_broker == "+ Tambah Broker Baru...":
         broker_baru = st.text_input("Ketik Nama Broker (Lalu Enter):").upper()
         if broker_baru and broker_baru not in data_pengaturan["broker_tersimpan"]:
             data_pengaturan["broker_tersimpan"].append(broker_baru)
-            simpan_pengaturan(data_pengaturan) # Simpan ke file JSON
+            simpan_pengaturan(data_pengaturan)
             st.rerun()
         broker = broker_baru if broker_baru else "OANDA"
     else:
         broker = pilihan_broker
+        
+    # MENU HAPUS BROKER
+    with st.expander("🗑️ Hapus Broker Salah Input"):
+        broker_hapus = st.selectbox("Pilih broker untuk dihapus:", data_pengaturan["broker_tersimpan"])
+        if st.button("Hapus Broker Ini"):
+            if broker_hapus in data_pengaturan["broker_tersimpan"]:
+                data_pengaturan["broker_tersimpan"].remove(broker_hapus)
+                simpan_pengaturan(data_pengaturan)
+                st.rerun()
         
     st.divider()
         
     # 2. Pilihan Pair (Otomatis Tarik dari Broker)
     st.write(f"**Pilih Mata Uang (Dari {broker})**")
     
-    # Menarik daftar populer otomatis dari TradingView sesuai broker yang dipilih
-    @st.cache_data(ttl=300) # Cache 5 menit agar cepat
+    @st.cache_data(ttl=300) 
     def ambil_pair_otomatis(nama_broker):
         try:
             hasil = tv.search_symbol(text="", exchange=nama_broker)
@@ -88,10 +96,8 @@ with st.sidebar:
         return []
     
     pair_dari_broker = ambil_pair_otomatis(broker)
-    
-    # Gabungkan pair bawaan (JSON) dengan pair hasil tarikan otomatis agar pilihannya lengkap
     semua_opsi_pair = list(set(data_pengaturan["pair_tersimpan"] + pair_dari_broker))
-    semua_opsi_pair.sort() # Urutkan sesuai abjad
+    semua_opsi_pair.sort() 
     
     selected_pairs = st.multiselect(
         "Pilih (Klik untuk melihat daftar):",
@@ -102,8 +108,17 @@ with st.sidebar:
     pair_baru = st.text_input("+ Ketik Manual (Jika tidak ada di daftar):").upper()
     if pair_baru and pair_baru not in data_pengaturan["pair_tersimpan"]:
         data_pengaturan["pair_tersimpan"].append(pair_baru)
-        simpan_pengaturan(data_pengaturan) # Simpan permanen
+        simpan_pengaturan(data_pengaturan) 
         st.rerun()
+        
+    # MENU HAPUS PAIR
+    with st.expander("🗑️ Hapus Mata Uang Salah Input"):
+        pair_hapus = st.selectbox("Pilih pair untuk dihapus:", data_pengaturan["pair_tersimpan"])
+        if st.button("Hapus Pair Ini"):
+            if pair_hapus in data_pengaturan["pair_tersimpan"]:
+                data_pengaturan["pair_tersimpan"].remove(pair_hapus)
+                simpan_pengaturan(data_pengaturan)
+                st.rerun()
     
     st.divider()
     
