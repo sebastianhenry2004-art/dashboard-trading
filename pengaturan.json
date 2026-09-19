@@ -1,0 +1,15 @@
+{
+  "broker_tersimpan": [
+    "OANDA",
+    "FX_IDC",
+    "BINANCE",
+    "PEPPERSTONE",
+    "IDX",
+    "FXCM"
+  ],
+  "pair_tersimpan": [
+    "XAUUSD",
+    "EURUSD",
+    "GBPUSD"
+  ]
+}
